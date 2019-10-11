@@ -1,5 +1,5 @@
 import os
-from wallet.iiot_cliente import IIoTCliente
+from iiot.iiot_client import IIoTCliente
 
 DISTRIBUTION_NAME = 'iiot'
 DEFAULT_URL = 'http://rest-api:8008'
@@ -15,18 +15,18 @@ def _get_pubkeyfile(customerName):
     return '{}/{}.pub'.format(key_dir, customerName)
 
 def setar_estado():
-    cliente = raw_input("Cliente: ")
-    cliente = raw_input("Estado: ")
+    cliente = input("Cliente: ")
+    estado = input("Estado: ")
     arquivo_chave = _get_keyfile(cliente)
-    carteira = IIoTCliente(baseUrl=DEFAULT_URL, keyFile=arquivo_chave)
-    resposta = carteira.deposit(estado)
+    iiot_cli = IIoTCliente(baseUrl=DEFAULT_URL, keyFile=arquivo_chave)
+    resposta = iiot_cli.setar_estado(estado)
     print("Resposta: {}".format(resposta))
 
 def obter_estado():
-    cliente = raw_input("Cliente: ")
+    cliente = input("Cliente: ")
     arquivo_chave = _get_keyfile(cliente)
-    carteira = IIoTCliente(baseUrl=DEFAULT_URL, keyFile=arquivo_chave)
-    dados = carteira.obter_estado()
+    iiot_cli = IIoTCliente(baseUrl=DEFAULT_URL, keyFile=arquivo_chave)
+    dados = iiot_cli.obter_estado()
 
     if dados is not None:
         print("\n{} tem um estado de = {}\n".format(cliente, dados.decode()))
@@ -35,8 +35,8 @@ def obter_estado():
 
 def main():
     op = "-1"
-    while op != "6":
-        op = raw_input("Opcao: ")
+    while op != "3":
+        op = input("Opcao: ")
         if op == "1":
             setar_estado()
         elif op == "2":

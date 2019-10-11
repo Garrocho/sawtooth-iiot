@@ -38,7 +38,7 @@ class IIoTTransactionHandler(TransactionHandler):
 
     def apply(self, transaction, context):                                                
         
-        # Get the payload and extract simplewallet-specific information.
+        # Get the payload and extract iiot-specific information.
         header = transaction.header
         payload_list = transaction.payload.decode().split(",")
         operation = payload_list[0]
