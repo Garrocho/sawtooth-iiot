@@ -53,6 +53,17 @@ class IoTClient(object):
     def store_sensor_data(self, estado):
         return self._wrap_and_send("store_sensor_data", estado)
 
+    def get_sensor_history(self):
+        result = self._send_to_restapi("transactions")
+        try:
+            estados = []
+            dados = yaml.safe_load(result)
+            for dado in dados['data'][:-1]:
+                estados.append(base64.b64decode(dado['payload']))
+            return estados
+        except BaseException:
+            return None
+
     def get_sensor_data(self):
         result = self._send_to_restapi("state/{}".format(self._address))
         try:

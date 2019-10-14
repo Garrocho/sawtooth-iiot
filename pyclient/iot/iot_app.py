@@ -19,7 +19,7 @@ def store_sensor_data():
     state = input("State: ")
     key_file = _get_keyfile(client)
     iot_cli = IoTClient(baseUrl=DEFAULT_URL, keyFile=key_file)
-    response = iot_cli.setar_estado(state)
+    response = iot_cli.store_sensor_data(state)
     print("Response: {}".format(response))
 
 def get_sensor_data():
@@ -33,12 +33,26 @@ def get_sensor_data():
     else:
         raise Exception("state not found: {}".format(client))
 
+def get_sensor_history():
+    client = input("Client: ")
+    key_file = _get_keyfile(client)
+    iot_cli = IoTClient(baseUrl=DEFAULT_URL, keyFile=key_file)
+    data = iot_cli.get_sensor_history()
+
+    if data is not None:
+        for i in data:
+            print(i.decode())
+    else:
+        raise Exception("history not found: {}".format(client))
+
 def main():
     op = "-1"
-    print("1 - store sensor data\n2 - get sensor data\n3 - exit\n")
-    while op != "3":
+    while op != "4":
+        print("\n1 - store sensor data\n2 - get sensor data\n3 - get sensor history\n4 - exit\n")
         op = input("Operation: ")
         if op == "1":
             store_sensor_data()
         elif op == "2":
             get_sensor_data()
+        elif op == "3":
+            get_sensor_history()
