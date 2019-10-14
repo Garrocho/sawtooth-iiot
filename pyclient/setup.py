@@ -6,11 +6,11 @@ from setuptools import setup, find_packages
 data_files = []
 
 setup(
-    name='iiot-cli',
+    name='iot-cli',
     version='1.0',
-    description='Sawtooth IIoT Example',
+    description='Sawtooth IoT Example',
     author='Garrocho',
-    url='https://github.com/garrocho/sawtooth-iiot',
+    url='https://github.com/garrocho/sawtooth-iot',
     packages=find_packages(),
     install_requires=[
         'aiohttp',
@@ -23,6 +23,6 @@ setup(
     data_files=data_files,
     entry_points={
         'console_scripts': [
-            'iiot = iiot_app:main',
+            'iot = iot_app:main',
         ]
     })

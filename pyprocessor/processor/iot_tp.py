@@ -1,25 +1,22 @@
 import traceback
 import sys
 import hashlib
-import logging
 
 from sawtooth_sdk.processor.handler import TransactionHandler
 from sawtooth_sdk.processor.exceptions import InvalidTransaction
 from sawtooth_sdk.processor.exceptions import InternalError
 from sawtooth_sdk.processor.core import TransactionProcessor
 
-LOGGER = logging.getLogger(__name__)
-
-FAMILY_NAME = "iiot"
+FAMILY_NAME = "iot"
 
 def _hash(data):
     '''Compute the SHA-512 hash and return the result as hex characters.'''
     return hashlib.sha512(data).hexdigest()
 
-# Prefix for iiot is the first six hex digits of SHA-512(TF name).
-sw_namespace = _hash(FAMILY_NAME.encode('utf-8'))[0:6]
+# Prefix for iot is the first six hex digits of SHA-512(TF name).
+iot_namespace = _hash(FAMILY_NAME.encode('utf-8'))[0:6]
 
-class IIoTTransactionHandler(TransactionHandler):
+class IoTTransactionHandler(TransactionHandler):
 
     def __init__(self, namespace_prefix):
         self._namespace_prefix = namespace_prefix
@@ -38,7 +35,7 @@ class IIoTTransactionHandler(TransactionHandler):
 
     def apply(self, transaction, context):                                                
         
-        # Get the payload and extract iiot-specific information.
+        # Get the payload and extract iot-specific information.
         header = transaction.header
         payload_list = transaction.payload.decode().split(",")
         operation = payload_list[0]
@@ -47,31 +44,13 @@ class IIoTTransactionHandler(TransactionHandler):
         # Get the public key sent from the client.
         from_key = header.signer_public_key
 
-        # Perform the operation.
-        LOGGER.info("Operation = " + operation)
+        if operation == "store_sensor_data":
+            self._store_sensor_data(context, amount, from_key)
 
-        if operation == "setar":
-            self._make_setar(context, amount, from_key)
-        else:
-            LOGGER.info("Unhandled action. " +
-                "Operation should be deposit, withdraw or transfer")
-
-    def _make_setar(self, context, amount, from_key):
+    def _store_sensor_data(self, context, amount, from_key):
         wallet_address = self._get_wallet_address(from_key)
-        LOGGER.info('Got the key {} and the wallet address {} '.format(
-            from_key, wallet_address))
-        current_entry = context.get_state([wallet_address])
-        new_balance = 0
 
-        if current_entry == []:
-            LOGGER.info('No previous deposits, creating new deposit {} '
-                .format(from_key))
-            new_balance = int(amount)
-        else:
-            balance = int(current_entry[0].data)
-            new_balance = int(amount) + int(balance)
-
-        state_data = str(new_balance).encode('utf-8')
+        state_data = str(amount).encode('utf-8')
         addresses = context.set_state({wallet_address: state_data})
 
         if len(addresses) < 1:
@@ -80,17 +59,12 @@ class IIoTTransactionHandler(TransactionHandler):
     def _get_wallet_address(self, from_key):
         return _hash(FAMILY_NAME.encode('utf-8'))[0:6] + _hash(from_key.encode('utf-8'))[0:64]
 
-def setup_loggers():
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
-
 def main():
     '''Entry-point function for the sensor transaction processor.'''
-    setup_loggers()
     try:
         # Register the transaction handler and start it.
         processor = TransactionProcessor(url='tcp://validator:4004')
-        handler = IIoTTransactionHandler(sw_namespace)
+        handler = IoTTransactionHandler(iot_namespace)
         processor.add_handler(handler)
         processor.start()
 

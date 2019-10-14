@@ -15,12 +15,12 @@ from sawtooth_sdk.protobuf.batch_pb2 import BatchList
 from sawtooth_sdk.protobuf.batch_pb2 import BatchHeader
 from sawtooth_sdk.protobuf.batch_pb2 import Batch
 
-FAMILY_NAME = 'iiot'
+FAMILY_NAME = 'iot'
 
 def _hash(data):
     return hashlib.sha512(data).hexdigest()
 
-class IIoTCliente(object):
+class IoTClient(object):
 
     def __init__(self, baseUrl, keyFile=None):
 
@@ -50,13 +50,13 @@ class IIoTCliente(object):
         self._address = _hash(FAMILY_NAME.encode('utf-8'))[0:6] + \
             _hash(self._publicKey.encode('utf-8'))[0:64]
 
-    def setar_estado(self, estado):
-        return self._wrap_and_send("setar", estado)
+    def store_sensor_data(self, estado):
+        return self._wrap_and_send("store_sensor_data", estado)
 
-    def obter_estado(self):
-        resultado = self._send_to_restapi("state/{}".format(self._address))
+    def get_sensor_data(self):
+        result = self._send_to_restapi("state/{}".format(self._address))
         try:
-            return base64.b64decode(yaml.safe_load(resultado)["data"])
+            return base64.b64decode(yaml.safe_load(result)["data"])
         except BaseException:
             return None
 

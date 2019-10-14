@@ -1,3 +1,3 @@
 __all__ = [
-    'iiot_tp'
+    'iot_tp'
 ]

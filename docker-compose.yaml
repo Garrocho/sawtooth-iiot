@@ -1,8 +1,8 @@
 version: '2.1'
 
 services:
-  iiot-processor:
-    container_name: iiot-processor
+  iot-processor:
+    container_name: iot-processor
     build:
       context: .
       dockerfile: ./pyprocessor/Dockerfile
@@ -13,10 +13,10 @@ services:
     depends_on:
       - validator
     volumes:
-      - '.:/project/iiot/'
+      - '.:/project/iot/'
 
-  iiot-client:
-    container_name: iiot-client
+  iot-client:
+    container_name: iot-client
     build:
       context: .
       dockerfile: ./pyclient/Dockerfile
@@ -29,7 +29,7 @@ services:
       - 'https_proxy=${https_proxy}'
       - 'no_proxy=rest-api,validator,${no_proxy}'
     volumes:
-      - '.:/project/iiot/'
+      - '.:/project/iot/'
     ports:
       - '0.0.0.0:3000:3000'
     depends_on:

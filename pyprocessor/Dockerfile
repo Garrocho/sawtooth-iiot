@@ -14,7 +14,7 @@ RUN \
 
 EXPOSE 4004/tcp
 
-WORKDIR /project/iiot/pyprocessor
-ENV PATH "$PATH:/project/iiot/pyprocessor"
+WORKDIR /project/iot/pyprocessor
+ENV PATH "$PATH:/project/iot/pyprocessor"
 
-CMD bash -c './iiot-tp'
+CMD bash -c './iot-tp'

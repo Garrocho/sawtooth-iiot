@@ -56,9 +56,9 @@ RUN echo "deb http://repo.sawtooth.me/ubuntu/ci xenial universe" >> /etc/apt/sou
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /project/iiot/pyclient
+WORKDIR /project/iot/pyclient
 
-ENV PATH "$PATH:/project/iiot/pyclient"
+ENV PATH "$PATH:/project/iot/pyclient"
 
 EXPOSE 3000
 

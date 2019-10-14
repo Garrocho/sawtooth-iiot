@@ -1,2 +1,2 @@
-# sawtooth-iiot
-A simple sawtooth "iiot" transaction family (processor + client)
+# sawtooth-iot
+A simple sawtooth "iot" transaction family (processor + client)
